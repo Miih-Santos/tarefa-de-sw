@@ -1,9 +1,9 @@
-const mysql = require("mysql2/promise")
-const { config } = require("dotenv")
+import mysql from "mysql2/promise";
+import {config} from "dotenv";
 
 config()
 
-async function conexao() {
+export async function conexao() {
     const pool = mysql.createPool({
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
@@ -14,7 +14,7 @@ async function conexao() {
     return pool
 } // <-- Fechando a função conexao
 
-async function closeConexao(pool) {
+export async function closeConexao(pool) {
     if (pool) {
         console.log("Fechando a conexão com o banco de dados")
         await pool.end()
@@ -23,7 +23,7 @@ async function closeConexao(pool) {
     }
 }
 
-async function testarConexao() {
+export async function testarConexao() {
     try {
         const pool = await conexao();
         const conn = await pool.getConnection();
@@ -34,5 +34,3 @@ async function testarConexao() {
         console.error("❌ Falha ao conectar com o MySQL:", erro.message);
     }
 }
-
-module.exports = { conexao, closeConexao, testarConexao }

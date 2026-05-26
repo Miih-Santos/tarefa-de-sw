@@ -1,32 +1,30 @@
+import express from 'express';
+import {conexao, testarConexao} from "./DAO/conexao.js";
 
-import express from 'express'
+const door = 3000;
 
-const app = express()
+const app = express();
+
+app.use(express.json());
+
+conexao();
 
 app.get('/', (req, res) =>{
-    res.json('Ola Mundo ...')
+    res.json('Olá, Mundo!')
 })
 
-app.get('/cliente', async (req, res) =>{
-    let produtos = await listarProdutos()
-    res.json(produtos)
+app.get('/registro', async (req,res)=>{
+    try{
+        const [rows] = await conexao.query("SELECT * FROM  registro_tbl")
+
+        return res.json({ "Consulta": rows });
+    } catch(error){
+        console.error(error + ", Erro ao buscar registro no banco de dados")
+        res.status(500).json({error: ", Erro ao buscar registro no banco de dados"})
+    }
 })
 
-app.post('/cliente', async (req, res) =>{
-    let produtos = await listarProdutos()
-    res.json(produtos)
-})
-
-app.put('/cliente', async (req, res) =>{
-    let produtos = await listarProdutos()
-    res.json(produtos)
-})
-
-app.delete('/cliente', async (req, res) =>{
-    let produtos = await listarProdutos()
-    res.json(produtos)
-})
-
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000')
+app.listen(door, () => {
+    testarConexao();
+    console.log('Server is running on http://localhost:3000');
 })
