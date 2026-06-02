@@ -1,35 +1,14 @@
-const {conexao} = require('../conexao.js')
+import { conexao } from "../conexao.js";
 
+export default async function buscarEndereco() {
+  const realizarConexao = await conexao()
 
-async function buscarEndereco(){
-  console.log('DAO de CLIENTE')
-    const sql = `SELECT * FROM tbl_cliente;`
-    
-    const conn = await conexao()
-    try {
-        // Executar a consulta
-        const [rows, fields] = await conn.query(sql);
-        await conn.end()
-        return rows
-      } catch (err) {
-        return err.message
-      }
+  try {
+    const sql = `SELECT * FROM endereco_tbl`
+    const [rows] =  await realizarConexao.query(sql)
+
+    return rows
+  } catch (error) {
+    console.error("Erro ao consultar a tabela de endereço" + error)
+  }
 }
-
-async function buscarCliente(codigo){
-    const sql = `SELECT * FROM tbl_cliente WHERE codigo = ?`
-    
-    const conn = await conexao()
-    
-    try {
-        // Executar a consulta
-        const [rows, fields] = await conn.query(sql, [codigo]);
-        await conn.end()
-        return rows
-      } catch (err) {
-        return err.message
-      }
-}
-
-
-module.exports = {buscarClientes, buscarCliente}
